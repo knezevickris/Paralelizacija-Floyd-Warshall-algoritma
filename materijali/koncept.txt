@@ -1,4 +1,6 @@
 1. Paralelno programiranje
+- prednosti i nedostaci paralelizacije
+- multiprocesori
 - visenitnost
 - nedostaci niti
 -  race condition
