@@ -1,0 +1,17 @@
+U  kojim slucajevima se ne smije paralelizovati floyd warshall algoritam?
+
+Paralelizacija Floyd-Warshall algoritma može biti nepoželjna ili čak kontraproduktivna u sledećim slučajevima:
+
+1. **Mali broj čvorova u grafu**: Kada graf ima mali broj čvorova, koristi se relativno malo računskih resursa. Troškovi koji nastaju zbog paralelizacije (kao što su kreiranje i upravljanje nitima) mogu biti veći od dobitaka u brzini izvršavanja. U takvim slučajevima, serijska implementacija može biti efikasnija.
+
+2. **Nedovoljno dostupnih procesora**: Ako nema dovoljno procesora ili jezgra za raspodelu posla, može doći do zagušenja resursa. Na primer, ako koristimo više niti nego što imamo dostupnih procesora, vreme potrebno za prebacivanje između niti može eliminisati prednosti paralelizacije.
+
+3. **Graf sa specifičnom strukturom**: Ako je graf specifično strukturiran (npr. većina čvorova je već direktno povezana, ili postoji vrlo malo putanja koje treba ažurirati), tada se veći deo rada u unutrašnjim petljama algoritma sastoji od provera koje ne zahtevaju puno obrade. Paralelizacija može biti nepotrebna i u tom slučaju.
+
+4. **Zavisnosti između iteracija**: Floyd-Warshall algoritam ima inherentne zavisnosti između iteracija po varijabli `k`. Rezultati prethodnih iteracija mogu biti neophodni za tačne proračune u narednim iteracijama. Ako ove zavisnosti nisu pravilno obrađene, može doći do grešaka u paralelnoj verziji algoritma.
+
+5. **Neefikasno upravljanje memorijom**: Paralelizacija može povećati zahteve za memorijom, a neefikasno upravljanje memorijom (npr. previše keširanih podataka, sukobi pri pristupu memoriji) može dovesti do smanjenja performansi. To se naročito odnosi na velike grafove gde se cela matrica udaljenosti možda neće uklopiti u keš memoriju.
+
+6. **Pristup deljenim podacima**: Ako se ne vodi računa o pravilnom upravljanju pristupom deljenim podacima (npr. korišćenje `critical` sekcija u OpenMP-u), to može dovesti do pojave "race condition" ili drugih sinhronizacionih problema, što može rezultirati netačnim rezultatima ili degradacijom performansi.
+
+Ukratko, paralelizacija Floyd-Warshall algoritma je korisna za velike grafove i sisteme sa dovoljno raspoloživih procesora, ali u slučajevima sa malim grafovima, ograničenim resursima ili složenim zavisnostima, može biti kontraproduktivna ili rizična.

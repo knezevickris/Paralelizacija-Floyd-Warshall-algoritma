@@ -1,0 +1,17 @@
+Vrijeme paralelnog izvrsenja algoritma: 1.00928 sekundi.
+Nit 1 je bila aktivna 0.92252 sekundi -> (91.40%) ukupnog vremena.
+Nit 2 je bila aktivna 0.94132 sekundi -> (93.27%) ukupnog vremena.
+Nit 3 je bila aktivna 0.93671 sekundi -> (92.81%) ukupnog vremena.
+Nit 4 je bila aktivna 0.93821 sekundi -> (92.96%) ukupnog vremena. To sam dobila za izvrsenje algoritma nad 696 cvorova. koje je tvoje misljenje, da li su ovi rezultati realni?
+
+Rezultati koje ste dobili ukazuju na to da su niti bile aktivne tokom veći deo ukupnog vremena izvršavanja, što je očekivano za paralelni algoritam kao što je Floyd-Warshall. Međutim, postoje nekoliko aspekata koje treba razmotriti kako bi se procenila realnost rezultata:
+
+1. **Preklapanje rada niti**: U OpenMP, niti često rade paralelno, ali ne nužno potpuno sinhronizovano. To znači da vreme rada svake niti može preklapati s vremenom drugih niti. U idealnom slučaju, suma vremena rada svih niti ne bi trebalo značajno da premašuje ukupno vreme izvršavanja algoritma.
+
+2. **Balans opterećenja**: Rezultati pokazuju relativno ujednačena vremena rada za sve niti, što je dobar znak da je opterećenje među nitima bilo prilično dobro raspoređeno. Međutim, u nekim slučajevima, posebno kod velikih i kompleksnih grafova, može doći do neujednačenog opterećenja, gde neke niti rade mnogo više od drugih.
+
+3. **Overhead paralelizacije**: Postoji neki overhead pri kreiranju i sinhronizaciji niti, što može dodatno uticati na rezultate. Overhead obično ne zauzima značajan procenat ukupnog vremena, ali može biti vidljiv u ovako malim razlikama između vremena aktivnosti niti.
+
+4. **Rezolucija vremena**: Vreme mereno pomoću `omp_get_wtime()` je prilično precizno, ali može doći do male netačnosti u slučaju kada vreme aktivnosti niti izuzetno blisko preklapa.
+
+S obzirom na navedene faktore, ovi rezultati izgledaju realno i očekivano za paralelno izvršavanje na više niti, gde svaka nit preuzima deo zadatka i radi u približno sličnom trajanju. Male razlike između niti mogu biti rezultat sinhronizacije, različitih tokova instrukcija, ili rasporeda opterećenja, što je normalno u paralelnom računarstvu.

@@ -1,2 +1,4 @@
 ﻿  floydWarshall.cpp
+C:\Users\x\Documents\JavaScript course\blackJack game\fakultet\floydWarshall\floydWarshall.cpp(1,1): warning C4005: '_CRT_SECURE_NO_WARNINGS': macro redefinition
+C:\Users\x\Documents\JavaScript course\blackJack game\fakultet\floydWarshall\floydWarshall.cpp(1,1): message : '_CRT_SECURE_NO_WARNINGS' previously declared on the command line
   floydWarshall.vcxproj -> C:\Users\x\Documents\JavaScript course\blackJack game\fakultet\floydWarshall\x64\Debug\floydWarshall.exe

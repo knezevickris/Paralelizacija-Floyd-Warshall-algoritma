@@ -1,0 +1,13 @@
+koje su prednosti deklaracije promjenljivih kao privatne, u slucaju #pragma omp parallel private(i,j,k)
+
+Deklaracija promenljivih kao privatnih (private) u kontekstu paralelizma sa OpenMP donosi nekoliko prednosti:
+
+Izbegavanje sukoba (race conditions): Svaka nit ima svoju kopiju privatne promenljive, što znači da niti ne dele te promenljive međusobno. To sprečava sukobe koji mogu nastati kada više niti pokušava istovremeno da pristupi ili modifikuje istu promenljivu.
+
+Bolja kontrola nad promenljivama: Privatne promenljive su izolovane u okviru svake niti, što omogućava programeru bolju kontrolu nad njihovim vrednostima tokom izvršenja. Svaka nit može nezavisno manipulisati svojom verzijom promenljive bez uticaja na druge niti.
+
+Povećana efikasnost: Pošto niti ne moraju da sinhronizuju pristup privatnim promenljivama, smanjuje se potreba za dodatnim mehanizmima sinhronizacije, poput zakljucavanja (locks), što može poboljšati ukupne performanse programa.
+
+Smanjena memorijska latencija: Pošto su privatne promenljive lokalne za svaku nit, mogu se smeštati u keš memoriju svakog procesora, što može smanjiti memorijsku latenciju i ubrzati pristup promenljivama.
+
+Jednostavnije razumevanje i debagovanje: Programi koji koriste privatne promenljive u paralelnim sekcijama su često lakši za razumevanje i debagovanje, jer je jasno koje niti koriste koje promenljive, smanjujući mogućnost grešaka izazvanih nepredviđenim deljenjem podataka.
