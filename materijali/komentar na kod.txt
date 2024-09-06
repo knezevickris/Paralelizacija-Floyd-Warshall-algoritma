@@ -11,3 +11,23 @@ Povećana efikasnost: Pošto niti ne moraju da sinhronizuju pristup privatnim pr
 Smanjena memorijska latencija: Pošto su privatne promenljive lokalne za svaku nit, mogu se smeštati u keš memoriju svakog procesora, što može smanjiti memorijsku latenciju i ubrzati pristup promenljivama.
 
 Jednostavnije razumevanje i debagovanje: Programi koji koriste privatne promenljive u paralelnim sekcijama su često lakši za razumevanje i debagovanje, jer je jasno koje niti koriste koje promenljive, smanjujući mogućnost grešaka izazvanih nepredviđenim deljenjem podataka.
+
+_________________________________________________________
+
+#pragma omp for schedule(static) u OpenMP direktivi ima sledeću ulogu i prednosti:
+
+Uloga:
+Distribucija iteracija: Ova direktiva govori OpenMP-u da treba da podeli iteracije naredne petlje između različitih niti. To znači da se petlja, koja se inače izvršava sekvencijalno, sada paralelizuje, a svaka nit dobija određeni broj iteracija koje će izvršiti.
+
+Static scheduling (staticko raspoređivanje): Parametar schedule(static) određuje da se iteracije petlje unapred dele između niti na statičan način. Na primer, ako imate petlju sa 1000 iteracija i 4 niti, svaka nit će dobiti 250 iteracija. Ova podela se vrši jednom, pre početka izvršenja petlje, i ostaje fiksna.
+
+Prednosti:
+Nizak overhead: Statičko raspoređivanje ima nizak runtime overhead jer se raspodela iteracija između niti vrši unapred, pre nego što se petlja počne izvršavati. Nema potrebe za dinamičkom raspodelom tokom izvršenja, što smanjuje dodatni trošak obrade.
+
+Predvidljivost: Pošto je raspodela iteracija fiksna, programer može lako da predvidi kako će se iteracije petlje raspodeliti između niti, što olakšava analizu performansi i optimizaciju koda.
+
+Efikasnost na uravnoteženim radnim opterećenjima: Statičko raspoređivanje je efikasno kada su iteracije petlje približno jednako zahtevne u smislu vremena izvršenja. U takvim slučajevima, svaka nit će imati približno isto radno opterećenje, što vodi do uravnoteženog i efikasnog paralelnog izvršenja.
+
+Jednostavnost: Statičko raspoređivanje je jednostavno za implementaciju i korišćenje, i često je zadovoljavajuće za mnoge aplikacije, posebno one gde se iteracije petlje sastoje od sličnih operacija.
+
+Međutim, ako iteracije nisu jednako zahtevne, statičko raspoređivanje može dovesti do nebalansiranog opterećenja (load imbalance) među nitima, gde neke niti završavaju mnogo ranije od drugih. U takvim slučajevima, dinamičko raspoređivanje (schedule(dynamic)) može biti bolje rešenje

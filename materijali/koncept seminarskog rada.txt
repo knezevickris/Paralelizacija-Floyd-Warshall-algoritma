@@ -1,18 +1,29 @@
 1. Paralelno programiranje
 - prednosti i nedostaci paralelizacije
 - multiprocesori
+- paralelni programski modeli
 - visenitnost
 - nedostaci niti
 - race condition
 2. Koristeni alati i tehnologije
 - C programski jezik
-- Visual Studio 2020
+-- osobine 
+-- tipovi podataka
+-- operatori
+-- petlje
+-- pokazivaci
+-- nizovi
+-- dinamicka alokacija memorije
+- Visual Studio 2022
+-- konzolna aplikacija
 - OpenMP biblioteka
 3. Flojd - Varsal algoritam
 4. Programsko rjesenje
 - opis upotrebe programa
 - nacin paralelizacije
+- programski kod
 5. Testiranje
 - intel i5 4300U 2 jezgra, 4 niti
 Zakljucak
 Literatura
+Popis slika i tabela
