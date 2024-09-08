@@ -4,7 +4,6 @@
 - paralelni programski modeli
 - visenitnost
 - nedostaci niti
-- race condition
 2. Koristeni alati i tehnologije
 - C programski jezik
 -- osobine 

@@ -31,3 +31,28 @@ Efikasnost na uravnoteženim radnim opterećenjima: Statičko raspoređivanje je
 Jednostavnost: Statičko raspoređivanje je jednostavno za implementaciju i korišćenje, i često je zadovoljavajuće za mnoge aplikacije, posebno one gde se iteracije petlje sastoje od sličnih operacija.
 
 Međutim, ako iteracije nisu jednako zahtevne, statičko raspoređivanje može dovesti do nebalansiranog opterećenja (load imbalance) među nitima, gde neke niti završavaju mnogo ranije od drugih. U takvim slučajevima, dinamičko raspoređivanje (schedule(dynamic)) može biti bolje rešenje
+
+__________________________________________________________________
+da li bolje koristiti schedule(static) ili schedule(dynamic) za nas kod?
+
+Za **Floyd-Warshall algoritam** u vašem slučaju, gde se koristi trostruka ugnježdena petlja, odgovor na to da li je bolje koristiti `schedule(static)` ili `schedule(dynamic)` zavisi od toga kako su distribuisani radni zadaci (tj. broj operacija unutar svake iteracije).
+
+### Kada koristiti `schedule(static)`:
+- **Uravnoteženo opterećenje**: Ako svaka iteracija petlje ima sličnu količinu posla (npr. svaka iteracija zahteva približno isto vreme za izvršavanje), tada je `schedule(static)` obično bolji izbor. Statičko raspoređivanje unapred deli iteracije podjednako između niti, što je vrlo efikasno i ima nizak overhead.
+  
+- **Predvidljivo opterećenje**: Kod algoritma kao što je Floyd-Warshall, svaka iteracija petlje ima sličan posao jer se u svakoj iteraciji ažurira matrica udaljenosti sa sličnim brojem operacija. Zato je `schedule(static)` obično dobra opcija, jer sve niti imaju sličan broj iteracija i obavljaju podjednako težak posao.
+
+### Kada koristiti `schedule(dynamic)`:
+- **Neuravnoteženo opterećenje**: Ako različite iteracije petlje imaju različitu količinu posla (npr. neke iteracije traju duže od drugih), dinamičko raspoređivanje (`schedule(dynamic)`) je bolje. OpenMP tada dodeljuje iteracije tokom izvršavanja, pa ako jedna nit završi ranije, dobija nove iteracije za rad.
+  
+- **Rizik od neravnomernog opterećenja**: Ako u vašem kodu postoji mogućnost da se broj operacija u svakoj iteraciji razlikuje, `schedule(dynamic)` može pomoći u balansiranju opterećenja. Na primer, ako u nekom trenutku jedan deo matrice ima znatno manji broj čvorova za ažuriranje, dinamičko raspoređivanje može omogućiti efikasnije iskorišćenje svih niti.
+
+### Zaključak za vaš kod:
+
+- **Ako je broj operacija po niti konstantan**, kao što je obično slučaj u algoritmu Floyd-Warshall, preporučuje se **`schedule(static)`** jer smanjuje overhead i održava balans između niti.
+  
+- **Ako postoji rizik da neke niti završe mnogo ranije** (npr. zbog različitih težina ili strukture grafa), onda **`schedule(dynamic)`** može poboljšati iskorišćenost CPU-a.
+
+Za standardni slučaj gde svaka iteracija ima isti broj operacija, preporučujem da ostanete pri **`schedule(static)`**, jer će verovatno biti efikasniji za vaš kod. Ako primetite da niti nisu ujednačeno opterećene, možete testirati **`schedule(dynamic)`** i analizirati performanse.
+
+______________________________________________________________________________

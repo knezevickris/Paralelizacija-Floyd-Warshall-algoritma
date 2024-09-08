@@ -1,48 +1,36 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
-
 #include<omp.h>
 #include<stdio.h>
 #include<stdlib.h>
-#include<time.h>
-
+#include <windows.h>
 
 void popuniMatricu(int* matrica, int n);
 void ispisMatrice(int* matrica, int n);
-void sekvencijalniAlgoritam(int* matrica1, int n, int odg);
+void sekvencijalniAlgoritam(int* matrica, int n, int odg);
 void paralelniAlgoritam(int* matrica, int n, int odg);
 
-
 int main() {
+	SetConsoleTitle(L"floydWarshall");
 	int n, odabir, odgovor; //promjenljive za cuvanje broja cvorova grafa i korisnickih odabira
 
 	while (1)
 	{
-		//korisnik unosi broj cvorova grafa
 		do {
 			printf("Unesite broj cvorova grafa: ");
 			scanf("%d", &n);
-
 			if (n < 2)
 				printf("\nMinimalan broj cvorova povezanog grafa je 2. Ponovite unos.\n");
 		} while (n < 2);
 
-		//broj cvorova grafa odredjuje dimenziju kvadratne matrice udaljenosti grafa
-		//vrsi se dinamicka alokacija prostora za matricu
+		//dinamicka alokacija prostora za matricu
 		int* matricaUdaljenosti;
 		matricaUdaljenosti = (int*)malloc((n * n) * sizeof(int));
-
 		//poziv funkcije za popunjavanje matrice udaljenosti brojnim vrijednostima
 		popuniMatricu(matricaUdaljenosti, n);
-		//ispisMatrice(matricaUdaljenosti, n);
-
-
 		printf("\nDa li zelite ispis matrice najkracih udaljenosti (0 - Ne, 1 - Da)?\n>");
 		scanf("%d", &odgovor);
-
-
 		printf("\nIzaberite nacin izvrsavanja:\n - 1 - sekvencijalno izvrsavanje\n - 2 - paralelno izvrsavanje\n>");
 		scanf("%d", &odabir);
-
 		switch (odabir)
 		{
 		case 1:
@@ -56,8 +44,6 @@ int main() {
 		default:
 			break;
 		}
-
-
 		//oslobadjanje zauzete memorije
 		free(matricaUdaljenosti);
 	}
@@ -73,15 +59,11 @@ void popuniMatricu(int* matrica, int n) {
 	for (i = 0; i < n; i++) {
 		for (j = 0; j <= i; j++)
 		{
-			//glavna dijagonala se popunjava nulama jer je udaljenost izmedju nekog cvora i samog sebe 0
 			if (i == j)
 				matrica[i * n+j] = 0;
-			//ostatak matrice se popunjava random pseudoslucajnim pozitivnim vrijednostima
-			//pretpostavili smo da je graf potpuno povezan tj. da postoji grana izmedju bilo koja dva cvora grafa i zato nema beskonacnih vrijednosti
 			else
 			{
-				vrijednost = 1 + rand() % n;
-				//gornja i donja trougaona matrica su simetricne
+				vrijednost = 1 + rand() % n;	
 				matrica[i * n + j] = vrijednost;
 				matrica[j * n + i] = vrijednost;
 			}
