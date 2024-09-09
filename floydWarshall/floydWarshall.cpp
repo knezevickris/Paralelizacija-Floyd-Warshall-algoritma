@@ -80,7 +80,6 @@ void ispisMatrice(int* matrica, int n) {
 			printf("\t%d", matrica[i * n + j]);
 		printf("\n");
 	}
-
 }
 
 //funckija sekvencijalniAlgoritam vrsi pronalazak najkracih putanja u matrici udaljenosti ciji se pokazivac proslijedjuje kao parametar, a n je dimenzija matrice
@@ -89,10 +88,9 @@ void sekvencijalniAlgoritam(int* matrica, int n, int odg)
 {
 	int i, j, k; //promjenljive za iteraciju kroz matricu
 	double pocetak, kraj; //promjenljive za mjerenje pocetnog i krajnjeg vremena
-		
+	
 	//biljezenje pocetnog vremena
 	pocetak = omp_get_wtime();
-
 	//sekvencijalna implementacija Floyd-Warshall algoritma
 	for(k=0; k<n; k++)
 		for(i=0; i<n; i++)
@@ -105,6 +103,8 @@ void sekvencijalniAlgoritam(int* matrica, int n, int odg)
 				}
 				else; //ako nema kraceg puta, nista se ne mijenja.
 			}
+	//biljezenje zavrsnog vremena
+	kraj = omp_get_wtime();
 
 	//ako je korisnik odabrao da ispise matricu, poziva funkciju koja prikazuje matricu najkracih udaljenosti
 	if (odg == 1)
@@ -113,12 +113,8 @@ void sekvencijalniAlgoritam(int* matrica, int n, int odg)
 		ispisMatrice(matrica, n);
 	}
 
-	//biljezenje zavrsnog vremena
-	kraj = omp_get_wtime();
-
 	//racunanje vremena izvrsenja algoritma i ispis rezultata u milisekundama
-	printf("\n\nVrijeme izvrsenja algoritma: %.5f sekundi.\n\n", kraj - pocetak);
-
+	printf("\n\nVrijeme izvrsenja algoritma: %.6f sekundi.\n\n", kraj - pocetak);
 }
 
 void paralelniAlgoritam(int* matrica, int n, int odg) {
@@ -127,18 +123,14 @@ void paralelniAlgoritam(int* matrica, int n, int odg) {
 	double pocetnoVrijeme, krajnjeVrijeme; 
 
 	printf("\nImate %d niti na raspolaganju.\n", brojNiti);
-	
 	//dinamicka alokacija niza u kom ce se cuvati vrijeme aktivnosti pojedinacnih niti
 	double* vrijemeNiti = (double*)malloc(brojNiti * sizeof(double));
 	//inicijalizacija niza
 	for (i = 0; i < brojNiti; i++) {
 		vrijemeNiti[i] = 0.0;
 	}
-	
 	omp_set_num_threads(brojNiti); //postavljanje broja niti koje ce se koristiti za sljedeci paralelni region
-
 	pocetnoVrijeme = omp_get_wtime(); //pocetak mjerenja vremena rada algoritma
-
 #pragma omp parallel private(i,j,k) //promjenljive su privatne za svaku nit tj. svaka nit ima svoju kopiju ovih promenljivih
 {
 	int idNiti = omp_get_thread_num();
@@ -156,7 +148,7 @@ void paralelniAlgoritam(int* matrica, int n, int odg) {
 					continue;
 				else if (matrica[i * n + k] + matrica[k * n + j] < matrica[i * n + j]) 
 				{
-					matrica[i * n + j] = matrica[i * n + k] + matrica[k * n + j]; //ako je pronadjen kraci put izmedju cvorova i i j preko cvora k, azurira vrijednost u matrici
+					matrica[i * n + j] = matrica[i * n + k] + matrica[k * n + j];
 				}
 				else;
 			}
@@ -165,20 +157,15 @@ void paralelniAlgoritam(int* matrica, int n, int odg) {
 		}
 	}
 }
-	//ako je korisnik odabrao da ispise matricu, poziva funkciju koja prikazuje matricu najkracih udaljenosti
+	krajnjeVrijeme = omp_get_wtime(); //biljezenje zavrsetka izvrsavanja algoritma
 	if (odg == 1)
 	{
 		printf("\n\nMatrica najkracih udaljenosti:\n\n");
 		ispisMatrice(matrica, n);
 	}
-
-	krajnjeVrijeme = omp_get_wtime(); //biljezenje zavrsetka izvrsavanja algoritma
-	
 	printf("\nVrijeme paralelnog izvrsenja algoritma: %.5f sekundi.\n", krajnjeVrijeme-pocetnoVrijeme);
-
 	for (i = 0; i < brojNiti; i++) {
 		printf("Nit %d je bila aktivna %.5f sekundi -> (%.2f%%) ukupnog vremena.\n", i+1, vrijemeNiti[i], (vrijemeNiti[i] / (krajnjeVrijeme-pocetnoVrijeme)) * 100.0);
 	}
-
 	free(vrijemeNiti);
 }
